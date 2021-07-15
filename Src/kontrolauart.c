@@ -32,6 +32,9 @@ uint8_t putCharRx(uint8_t rcvd_byte)
 		*lcl_w_ptr=rcvd_byte;
 		Rx_writing_ptr=lcl_w_ptr;
 	}
+
+//	__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+
 }
 
 uint8_t putCharTx(uint8_t licznik, uint8_t* array)
@@ -69,7 +72,7 @@ uint8_t sizeofRX()
 	}
 	else
 	{
-		uint8_t size=lcl_w_ptr-lcl_r_ptr+MY_BUFOR_BUFSIZE-1;
+		uint8_t size=lcl_w_ptr-lcl_r_ptr+MY_BUFOR_BUFSIZE;
 
 		return size;
 	}
@@ -88,7 +91,7 @@ if(lcl_w_ptr>=lcl_r_ptr)
 else
 {
 
-	uint8_t size=lcl_w_ptr-lcl_r_ptr+MY_BUFOR_BUFSIZE-1;
+	uint8_t size=lcl_w_ptr-lcl_r_ptr+MY_BUFOR_BUFSIZE;
 
 
 	return size;

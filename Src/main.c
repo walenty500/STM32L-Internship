@@ -28,6 +28,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "kontrolauart.h"
+#include <CycleLED.h>
+#include "KeyboardHandler.h"
+#include <ProjectFunctions.h>
 #include "timer.h"
 #include <stdio.h>
 #include<stdlib.h>
@@ -74,6 +77,7 @@ GPIO_InitTypeDef GPIO_InitStruct;
 
 uint8_t czy=0;
 uint8_t TS_updated=0;
+int ctr=0;
 
 void toggle_led_blue()
 {
@@ -104,7 +108,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -121,30 +124,37 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
+  CycleLedInit();
+  KeyboardHandlerInit();
   HAL_TIM_Base_Start_IT(&htim7);
-int ctr=0;
-	const char message[] = "Benek";
-	const char message2[] = "Hello World";
+  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+//	const char message[] = "Benek";
+//	const char message2[] = "Hello World";
 
-	HAL_UART_Receive_IT(&huart1, &receive_buffer, 1);
+//	HAL_UART_Receive_IT(&huart1, &receive_buffer, 1);
 
 	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
 	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 
+//	uint32_t led_cycle_time=1000;
+//	AddLedCycle(blueLed,1000);
+//	uint32_t led_cycle_time2=2000;
+	AddLedCycle(greenLed,2000);
+	AddReadKeyboardCycle(15);
 //	*head=NULL;
-	TimeStamp_type test;
-	test.Handler=&toggle_led_blue;
-	AddTimestamp(&test,2000);
-//	Del_First_Timestamp();
-//	TimeStamp_type test2;
-	test2.Handler=&toggle_led_green;
-	AddTimestamp(&test2,4000);
-	TimeStamp_type test3;
-	test3.Handler=&toggle_led_blue;
-	AddTimestamp(&test3,6000);
-	TimeStamp_type test5;
-	test5.Handler=&toggle_led_green;
-	AddTimestamp(&test5,8000);
+//	TimeStamp_type test;
+//	test.Handler=&toggle_led_blue;
+//	AddTimestamp(&test,2000);
+////	Del_First_Timestamp();
+////	TimeStamp_type test2;
+//	test2.Handler=&toggle_led_green;
+//	AddTimestamp(&test2,4000);
+//	TimeStamp_type test3;
+//	test3.Handler=&toggle_led_blue;
+//	AddTimestamp(&test3,6000);
+//	TimeStamp_type test5;
+//	test5.Handler=&toggle_led_green;
+//	AddTimestamp(&test5,8000);
 //	TS_updated=UpdateTimeStamp();
 //	DelTimeStamp(&test3);
 //	DelTimeStamp(&test);
@@ -158,47 +168,11 @@ int ctr=0;
   /* USER CODE BEGIN WHILE */
 	while (1)
 {
-//	uint8_t currRxsize=dataInRx();
-//	if(dataHadleFlag==1)   //Judging whether it is idle interruption
-//		{
-//		dataHadleFlag=0;                   //Clear idle interrupt sign (otherwise it will continue to enter interrupt)
-//	       handleData();
-//	       czy++;
-//
-//		}
+
 	if(UpdateTimeStamp()) continue;
-	//wysylanie wiadomosci na klikniecie przycisku
-	  if(HAL_GPIO_ReadPin(B1_GPIO_Port,B1_Pin))
-	 	  {
-	 		  while(HAL_GPIO_ReadPin(B1_GPIO_Port,B1_Pin))
-	 		  {
+	if(TestKeyboard()) continue;
+	if(HandleRx()) continue;
 
-	 		  }
-
-	 		 putCharTx(11, message2);
-
-//	 		ctr++;
-//	 		ctr=ctr%2;
-//	 		if(ctr==0){
-//		 		HAL_UART_Transmit(&huart1, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
-//		 		}else{
-//		 			HAL_UART_Transmit(&huart1, (uint8_t*)message2, strlen(message2), HAL_MAX_DELAY);
-//		 		}
-	 	  }
-	//wysylanie co 5s danych z Tx - trzeba wczesniej do tx cos wpisac
-//			HAL_Delay(5000);
-//			uint8_t dane_wyslane[MY_BUFOR_BUFSIZE];
-//			uint8_t dataInTxBuf=dataInTx();
-//			if(dataInTxBuf!=0)
-//			{
-//				obslugaCzytaniaCyclicTx(1,&data_main);
-//				HAL_UART_Transmit_IT(&huart1, &data_main, 1);
-//			}
-//	 		HAL_GPIO_TogglePin(LD4_GPIO_Port,LD4_Pin);
-//	 		obslugaCzytania(1);
-//
-
-//	 	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -249,36 +223,10 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-//	HAL_GPIO_TogglePin(LD3_GPIO_Port,LD3_Pin);
-//	HAL_UART_Receive_IT (&huart1, &receive_buffer, 1);
-//	putCharRx(receive_buffer);
-}
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-//	HAL_GPIO_TogglePin(LD4_GPIO_Port,LD4_Pin);
-//	uint8_t dataInTxBuf=dataInTx();
-//	if(dataInTxBuf!=0)
-//	{
-//		obslugaCzytaniaCyclicTx(1,&data_main);
-//		HAL_UART_Transmit_IT(&huart1, &data_main, 1);
-//	}
-//	else
-//	{
-//		__HAL_UART_DISABLE_IT(&huart1, UART_IT_TXE);
-//	}
-}
 
 void user_uart_handler(UART_HandleTypeDef *huart)
 {
-//	if(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE))   //Judging whether it is idle interruption
-//		{
-//	       __HAL_UART_CLEAR_IDLEFLAG(&huart1);                     //Clear idle interrupt sign (otherwise it will continue to enter interrupt)
-////	       czy++;
-//	       dataHadleFlag=1;
-//		}
+
 	if ((USART1->SR & USART_SR_TXE) != RESET)
 	{
 		uint8_t dataInTxBuf=sizeofTx();
@@ -288,63 +236,21 @@ void user_uart_handler(UART_HandleTypeDef *huart)
 				HAL_GPIO_TogglePin(LD4_GPIO_Port,LD4_Pin);
 				data=getCharTX();
 				USART1->DR=((data) & (uint8_t)0x00FF);
-//				USART1->DR=((data) & (uint8_t)0x00FF);
-		//		__HAL_UART_ENABLE_IT(&huart1, UART_IT_TXE);
-		//		HAL_UART_Transmit_IT(&huart1, &data_main, 1);
 			}
 
 			else
 			{
 				__HAL_UART_DISABLE_IT(&huart1, UART_IT_TXE);
-				//return;(?)
 			}
 	}
 
-    if (((USART1->SR & USART_SR_RXNE) != RESET) && ((USART1->CR1 & USART_CR1_RXNEIE) != RESET))
+    if (((USART1->SR & USART_SR_RXNE) != RESET))// && (USART1->SR & USART_SR_ORE) != RESET))// && ((USART1->CR1 & USART_CR1_RXNEIE) != RESET))
     {
-    	uint8_t dataInRxBuf=sizeofRX();
 		uint8_t data=0;
-		if(dataInRxBuf>=MY_BUFOR_BUFSIZE)
-		{
-			HAL_GPIO_TogglePin(LD3_GPIO_Port,LD3_Pin);
-			data=USART1->DR;
-			putCharRx(data);
-//      UART_Receive_IT(huart);
-//      return;
-		}
-		else
-		{
-			__HAL_UART_DISABLE_IT(&huart1, UART_IT_RXNE);
-		}
+		data=((USART1->DR)& (uint8_t)0x00FF);
+		putCharRx(data);
     }
-//	uint8_t dataInTxBuf=sizeofTx();
-//	uint8_t data=0;
-//	if(dataInTxBuf!=0)
-//	{
-//		HAL_GPIO_TogglePin(LD4_GPIO_Port,LD4_Pin);
-//		data=getCharTX();
-//		USART1->DR=((data) & (uint8_t)0x00FF);
-////		__HAL_UART_ENABLE_IT(&huart1, UART_IT_TXE);
-////		HAL_UART_Transmit_IT(&huart1, &data_main, 1);
-//	}
-//	else
-//	{
-//		__HAL_UART_DISABLE_IT(&huart1, UART_IT_TXE);
-//	}
 
-//	uint8_t dataInRxBuf=dataInRx();
-//	if(dataInRxBuf!=0)
-//	{
-//		HAL_GPIO_TogglePin(LD3_GPIO_Port,LD3_Pin);
-//		obslugaCzytaniaCyclicTx(1,&data_main);
-//		USART1->DR=(&data_main);
-////		__HAL_UART_ENABLE_IT(&huart1, UART_IT_TXE);
-////		HAL_UART_Transmit_IT(&huart1, &data_main, 1);
-//	}
-//	else
-//	{
-//		__HAL_UART_DISABLE_IT(&huart1, UART_IT_TXE);
-//	}
 }
 
 /* USER CODE END 4 */

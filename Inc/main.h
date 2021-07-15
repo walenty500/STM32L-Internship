@@ -64,6 +64,7 @@ void Error_Handler(void);
 #define PC15_OSC32_OUT_GPIO_Port GPIOC
 #define B1_Pin GPIO_PIN_0
 #define B1_GPIO_Port GPIOA
+#define B1_EXTI_IRQn EXTI0_IRQn
 #define IDD_Measurement_Pin GPIO_PIN_4
 #define IDD_Measurement_GPIO_Port GPIOA
 #define GRP2_Sampling_Pin GPIO_PIN_6

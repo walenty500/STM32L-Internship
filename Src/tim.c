@@ -63,8 +63,8 @@ void MX_TIM7_Init(void)
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
 {
 
-  //if(tim_baseHandle->Instance==TIM7)
-  //{
+  if(tim_baseHandle->Instance==TIM7)
+  {
   /* USER CODE BEGIN TIM7_MspInit 0 */
 
   /* USER CODE END TIM7_MspInit 0 */
@@ -77,7 +77,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE BEGIN TIM7_MspInit 1 */
 
   /* USER CODE END TIM7_MspInit 1 */
-  //}
+  }
 }
 
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)

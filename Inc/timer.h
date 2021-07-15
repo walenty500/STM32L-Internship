@@ -16,6 +16,14 @@ typedef struct TimeStamp
 	void (*Handler)(void);
 }TimeStamp_type;
 
+//typedef struct TimeStamp2
+//{
+//	uint32_t timeOut;
+//	struct TimeStamp * next;
+//	void (*Handler)(uint32_t);
+//}TimeStamp2_type;
+
+
 
 ////function declarations
 void AddTimestamp(TimeStamp_type*,uint32_t);

@@ -10,12 +10,12 @@
 
 #include "stdint.h"
 
-#define MY_BUFOR_BUFSIZE 21
+#define MY_BUFOR_BUFSIZE 100
 
 
 
-uint8_t putCharRx(uint8_t);
-uint8_t putCharTx(uint8_t,uint8_t*);
+void putCharRx(uint8_t);
+void putCharTx(uint8_t,uint8_t*);
 uint8_t sizeofRX();
 uint8_t sizeofTx();
 uint8_t getCharRX();

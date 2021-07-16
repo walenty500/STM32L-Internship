@@ -133,7 +133,7 @@ int main(void)
 
 //	HAL_UART_Receive_IT(&huart1, &receive_buffer, 1);
 
-	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
+//	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
 	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 
 //	uint32_t led_cycle_time=1000;
@@ -250,6 +250,13 @@ void user_uart_handler(UART_HandleTypeDef *huart)
 		data=((USART1->DR)& (uint8_t)0x00FF);
 		putCharRx(data);
     }
+
+	if(((USART1->SR & USART_SR_IDLE) != RESET))
+	{
+	  setRXFlag();
+	uint8_t data=0;
+	data=((USART1->DR)& (uint8_t)0x00FF);
+	}
 
 }
 

@@ -17,6 +17,7 @@
 
 uint8_t message[] = "Hello World";
 uint8_t rcvd_msg[13];
+uint8_t RXReadyToReadFlag=0;
 
 void KeyboardAction()
 {
@@ -38,6 +39,7 @@ void KeyboardAction()
 
 	LedBlueON_OF();
 	putCharTx(UARTFrame_size, UARTFrame);
+	putCharTx(UARTFrame_size, UARTFrame);
 
 
 //	//ustawienie licznika
@@ -56,7 +58,7 @@ void KeyboardAction()
 
 uint8_t HandleRx()
 {
-	if(UART_FLAG_IDLE == 1)
+	if(RXReadyToReadFlag == 1)
 	{
 		if(sizeofRX()>2)
 		{
@@ -75,6 +77,10 @@ uint8_t HandleRx()
 				clc_parity=(clc_parity^rcvd_msg[i]);
 			}
 			rcvd_parity=getCharRX();
+			if(sizeofRX()<3)
+			{
+				RXReadyToReadFlag=0;
+			}
 			if(rcvd_parity==clc_parity)
 			{
 				return 1;
@@ -83,10 +89,16 @@ uint8_t HandleRx()
 			{
 				return 0;
 			}
+
 		}
 	}
 	else
 	{
 		return 0;
 	}
+}
+
+void setRXFlag()
+{
+	RXReadyToReadFlag=1;
 }

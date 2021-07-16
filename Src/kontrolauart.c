@@ -17,7 +17,7 @@
 	uint8_t *Tx_reading_ptr=UART_Tx_cyclic_bufor;
 
 
-uint8_t putCharRx(uint8_t rcvd_byte)
+void putCharRx(uint8_t rcvd_byte)
 {
 	uint8_t *lcl_w_ptr=Rx_writing_ptr;
 
@@ -37,7 +37,7 @@ uint8_t putCharRx(uint8_t rcvd_byte)
 
 }
 
-uint8_t putCharTx(uint8_t licznik, uint8_t* array)
+void putCharTx(uint8_t licznik, uint8_t* array)
 {
 	uint8_t *lcl_w_ptr=Tx_writing_ptr;
 

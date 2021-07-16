@@ -10,5 +10,6 @@
 
 void KeyboardAction();
 uint8_t HandleRx();
+void setRXFlag();
 
 #endif /* INC_PROJECTFUNCTIONS_H_ */
